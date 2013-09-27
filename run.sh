@@ -11,7 +11,7 @@ fi
 
 private_key_path=`mktemp`
 private_key_name=$(eval echo "\$${WERCKER_SQALE_KEYNAME}_PRIVATE")
-echo -e $private_key_name > ${private_key_path}
+echo -e "$private_key_name" > $private_key_path
 chmod 600 $private_key_path
 info "Set up the private key."
 
