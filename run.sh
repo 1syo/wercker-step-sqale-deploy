@@ -10,7 +10,9 @@ if [ ! -d "$HOME/.ssh" ]; then
 fi
 
 private_key_path=`mktemp`
-echo $WERCKER_SQALE_PRIVATE_KEY > ${private_key_path}
+private_key_name=$(eval echo "\$${WERCKER_SQALE_KEYNAME}_PRIVATE")
+echo -e $private_key_name > ${private_key_path}
+chmod 600 $private_key_path
 info "Set up the private key."
 
 cat <<-__CONFIG__ > $HOME/.ssh/config
