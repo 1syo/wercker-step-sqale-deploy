@@ -2,14 +2,14 @@
 
 ## Options
 
-* ``private_key``  (required) The name of the key variable to export.
+* ``keyname``  (required) The name of the key variable to export.
 * ``repository``  (required) Your deploy path on Sqale.
 
 ## Example
 
 ```
-sqale:
-  private_key: $SQALE
+- 1syo/sqale@0.0.1:
+  keyname: SQALE
   repository: /yourname/repository.git
 ```
 
