@@ -1,9 +1,9 @@
 #!/bin/sh
-if [ ! -n "$WERCKER_SQALE_KEYNAME" ]; then
+if [ ! -n "$WERCKER_SQALE_DEPLOY_KEYNAME" ]; then
   fail 'Please specify keyname property.'
 fi
 
-if [ ! -n "$WERCKER_SQALE_REPOSITORY" ]; then
+if [ ! -n "$WERCKER_SQALE_DEPLOY_REPOSITORY" ]; then
   fail 'Please specify repository property.'
 fi
 
@@ -12,7 +12,7 @@ if [ ! -d "$HOME/.ssh" ]; then
 fi
 
 private_key_path=`mktemp`
-private_key_name=$(eval echo "\$${WERCKER_SQALE_KEYNAME}_PRIVATE")
+private_key_name=$(eval echo "\$${WERCKER_SQALE_DEPLOY_KEYNAME}_PRIVATE")
 
 if [ ! -n "$private_key_name" ]; then
   fail 'Private key was not found'
@@ -36,7 +36,7 @@ info "Set up the ssh config."
 
 now=`date +%s`
 rm -rf .bundle
-git remote add sqale ssh://gateway_sqale_jp$WERCKER_SQALE_REPOSITORY
+git remote add sqale ssh://gateway_sqale_jp$WERCKER_SQALE_DEPLOY_REPOSITORY
 git checkout -b ${now}
 
 info "Deployment to sqale"
