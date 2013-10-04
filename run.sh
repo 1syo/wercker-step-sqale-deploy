@@ -1,8 +1,4 @@
 #!/bin/sh
-if [ ! "$WERCKER" = true ]; then
-  fail "Outside the wercker environment, not deploy."
-fi
-
 if [ ! -n "$WERCKER_SQALE_KEYNAME" ]; then
   fail 'Please specify keyname property.'
 fi
