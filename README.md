@@ -8,7 +8,7 @@
 ## Example
 
 ```
-- 1syo/sqale-deploy@0.1.0:
+- 1syo/sqale-deploy@0.1.1:
   keyname: SQALE
   repository: /yourname/repository.git
 ```
