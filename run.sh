@@ -1,14 +1,9 @@
-#!/bin/sh
 if [ ! -n "$WERCKER_SQALE_DEPLOY_KEYNAME" ]; then
   fail 'Please specify keyname property.'
 fi
 
 if [ ! -n "$WERCKER_SQALE_DEPLOY_REPOSITORY" ]; then
   fail 'Please specify repository property.'
-fi
-
-if [ ! -d "$HOME/.ssh" ]; then
-  mkdir -p $HOME/.ssh
 fi
 
 private_key_path=`mktemp`
@@ -22,25 +17,21 @@ echo -e "$private_key_name" > $private_key_path
 chmod 600 $private_key_path
 info "Set up the private key."
 
-cat <<-__CONFIG__ > $HOME/.ssh/config
-  Host gateway_sqale_jp
-    User sqale
-    Hostname gateway.sqale.jp
-    Port 2222
-    UserKnownHostsFile /dev/null
-    StrictHostKeyChecking no
-    IdentityFile ${private_key_path}
-__CONFIG__
-chmod 600 $HOME/.ssh/config
-info "Set up the ssh config."
+ssh_option_path=`mktemp`
+cat <<-__OPTION__ > $ssh_option_path
+#! /bin/sh
+exec ssh -oIdentityFile=${private_key_path} -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no "\$@"
+__OPTION__
+chmod +x $ssh_option_path
+info "Set up ssh options."
 
 now=`date +%s`
 rm -rf .bundle
-git remote add sqale ssh://gateway_sqale_jp$WERCKER_SQALE_DEPLOY_REPOSITORY
+git remote add sqale "ssh://sqale@gateway_sqale_jp:2222${WERCKER_SQALE_DEPLOY_REPOSITORY}"
 git checkout -b ${now}
 
 info "Deployment to sqale"
-git push -f sqale ${now}:master
+GIT_SSH=$ssh_option_path git push -f sqale ${now}:master
 exit_code=$?
 
 rm $private_key_path
